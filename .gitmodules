@@ -1,0 +1,9 @@
+[submodule "ecl"]
+	path = ecl
+	url = https://github.com/spaceotter/ecl.git
+[submodule "irrlicht"]
+	path = irrlicht
+	url = https://github.com/minetest/irrlicht.git
+[submodule "unplusplus"]
+	path = unplusplus
+	url = https://github.com/spaceotter/unplusplus.git
