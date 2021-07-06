@@ -7,3 +7,12 @@
 [submodule "unplusplus"]
 	path = unplusplus
 	url = https://github.com/spaceotter/unplusplus.git
+[submodule "ST-JSON"]
+	path = ST-JSON
+	url = https://github.com/marijnh/ST-JSON.git
+[submodule "slime"]
+	path = slime
+	url = https://github.com/slime/slime.git
+[submodule "cl-upp"]
+	path = cl-upp
+	url = https://github.com/spaceotter/cl-upp.git
