@@ -50,7 +50,7 @@ add_custom_command(
     ${IRRLISP_COMMON_LISP_SRC})
 
 add_custom_target(irrlisp-lib
-    DEPENDS "${IRRLISP_ECL_LIB}" IrrlichtMt-clib
+    DEPENDS "${IRRLISP_ECL_LIB}" IrrlichtMt-clib ecl
     )
 
 add_executable(irrlisp src/main.cpp)

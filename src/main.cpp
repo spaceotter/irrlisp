@@ -74,8 +74,20 @@ int main(int argc, char *argv[]) {
 
   smgr->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
 
-  cl_object result = cl_eval(c_string_to_object("(make-sn)"));
-  ecl_print(result->foreign.tag, ECL_T);
+  cl_env_ptr env = ecl_process_env();
+  ECL_CATCH_ALL_BEGIN(env) {
+    ECL_HANDLER_CASE_BEGIN(env, ecl_list1(ECL_T)) {
+      cl_object result =
+          cl_eval(c_string_to_object("(cl-upp::read-spec \"blah\")"));
+      ecl_print(result, ECL_T);
+    } ECL_HANDLER_CASE(1, condition) {
+      std::cout << "There was a lisp condition" << std::endl;
+      ecl_print(condition, ECL_T);
+      std::cout << std::endl;
+    } ECL_HANDLER_CASE_END;
+  } ECL_CATCH_ALL_IF_CAUGHT {
+    std::cout << "There was an error running lisp" << std::endl;
+  } ECL_CATCH_ALL_END;
 
   while(device->run())
   {
