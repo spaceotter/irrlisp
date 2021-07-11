@@ -8,5 +8,6 @@
 ;;(setq c:*user-ld-flags* "-L${PROJECT_BINARY_DIR} -L${CMAKE_LIBRARY_OUTPUT_DIRECTORY} -ltl-common -lstdc++")
 (setq asdf::*user-cache* #P"${PROJECT_BINARY_DIR}/ecl-cache/")
 (ensure-directories-exist asdf::*user-cache*)
+(defvar *irrlicht-json* "${IrrlichtMt-clib_JSON}")
 (asdf:make-build :irrlisp :type :static-library :monolithic t :move-here "${PROJECT_BINARY_DIR}" :init-name "init_lib_IRRLISP")
 (quit)

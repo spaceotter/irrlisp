@@ -47,7 +47,7 @@ add_custom_command(
     COMMAND
     mv "${PROJECT_BINARY_DIR}/irrlisp--all-systems.a" "${IRRLISP_ECL_LIB}"
     DEPENDS ecl-prj "${PROJECT_BINARY_DIR}/irrlisp-build.lisp" IrrlichtMt-clib
-    ${IRRLISP_COMMON_LISP_SRC})
+    ${IRRLISP_COMMON_LISP_SRC} "${IrrlispMt-clib_JSON}")
 
 add_custom_target(irrlisp-lib
     DEPENDS "${IRRLISP_ECL_LIB}" IrrlichtMt-clib ecl

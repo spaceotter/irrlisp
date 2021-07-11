@@ -1,8 +1,7 @@
 (defpackage :irrlisp
   (:use :common-lisp :ffi)
-  (:export #:increment2))
+  (:export))
 
 (cl::in-package :irrlisp)
 
-(defun increment2 (n)
-  (+ n 2))
+(cl-upp:include-c++ cl-user::*irrlicht-json*)
