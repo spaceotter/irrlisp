@@ -4,7 +4,7 @@
  */
 
 #include <iostream>
-#include <irrlicht/irrlicht.h>
+#include <irrlicht.h>
 #include <ecl/ecl.h>
 
 using namespace irr;
@@ -54,8 +54,6 @@ void deinit_lisp() {
 }
 
 int main(int argc, char *argv[]) {
-  init_lisp(argc, argv, 8117);
-
   IrrlichtDevice *device =
       createDevice( video::EDT_OPENGL, dimension2d<u32>(1920, 1080), 16,
                     false, false, true, 0);
@@ -72,7 +70,28 @@ int main(int argc, char *argv[]) {
   guienv->addStaticText(L"Hello World! This is Irrlicht with the opengl renderer!",
                         rect<s32>(10,10,300,32), true);
 
-  smgr->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
+  std::cout << "load model" << std::endl;
+  IAnimatedMesh *mesh = smgr->getMesh("irrlicht/media/faerie.md2");
+  if (!mesh) {
+    device->drop();
+    return 1;
+  }
+  IAnimatedMeshSceneNode *node = smgr->addAnimatedMeshSceneNode(mesh);
+  if (node) {
+    node->setMaterialFlag(EMF_LIGHTING, false);
+    node->setMD2Animation(scene::EMAT_STAND);
+    std::cout << "load texture" << std::endl;
+    ITexture *texture = driver->getTexture("irrlicht/media/faerie2.bmp");
+    if (!texture) {
+      device->drop();
+      return 1;
+    }
+    node->setMaterialTexture(0, texture);
+  }
+
+  smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
+
+  init_lisp(argc, argv, 8117);
 
   cl_env_ptr env = ecl_process_env();
   ECL_CATCH_ALL_BEGIN(env) {
@@ -98,7 +117,7 @@ int main(int argc, char *argv[]) {
       the GUI Environment draw their content. With the endScene()
       call everything is presented on the screen.
     */
-    driver->beginScene(true, true, SColor(255,100,101,140));
+    driver->beginScene(ECBF_COLOR | ECBF_DEPTH, SColor(255, 100, 101, 140));
 
     smgr->drawAll();
     guienv->drawAll();
