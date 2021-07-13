@@ -53,10 +53,27 @@ void deinit_lisp() {
   cl_shutdown();
 }
 
+IrrlichtDevice *device = nullptr;
+IGUIStaticText *text = nullptr;
+
+extern "C" void gui_debugger(cl_object condition, cl_object old_hook) {
+  std::cout << "GUI debugger" << std::endl;
+  cl_object restarts = cl_compute_restarts(1, condition);
+  cl_object str = cl_prin1_to_string(restarts);
+  if (ECL_BASE_STRING_P(str)) {
+    std::wstring s((char *)str->string.self,
+                   (char *)str->string.self + str->string.dim);
+    text->setText(s.c_str());
+  } else if (ECL_EXTENDED_STRING_P(str)) {
+    std::wstring s((wchar_t *)str->string.self,
+                   (wchar_t *)str->string.self + str->string.dim);
+    text->setText(s.c_str());
+  }
+}
+
 int main(int argc, char *argv[]) {
-  IrrlichtDevice *device =
-      createDevice( video::EDT_OPENGL, dimension2d<u32>(1920, 1080), 16,
-                    false, false, true, 0);
+  device = createDevice(video::EDT_OPENGL, dimension2d<u32>(1920, 1080), 16,
+                        false, false, true, 0);
 
   if (!device)
     return 1;
@@ -67,7 +84,7 @@ int main(int argc, char *argv[]) {
   ISceneManager* smgr = device->getSceneManager();
   IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-  guienv->addStaticText(L"Hello World! This is Irrlicht with the opengl renderer!",
+  text = guienv->addStaticText(L"Hello World! This is Irrlicht with the opengl renderer!",
                         rect<s32>(10,10,300,32), true);
 
   std::cout << "load model" << std::endl;
@@ -94,10 +111,15 @@ int main(int argc, char *argv[]) {
   init_lisp(argc, argv, 8117);
 
   cl_env_ptr env = ecl_process_env();
+  cl_object debug_hook = ecl_make_symbol("*INVOKE-DEBUGGER-HOOK*", "EXT");
+  cl_object lgdsym = ecl_make_symbol("GUI-DEBUGGER", "IRRLISP");
+  ecl_setq(env, debug_hook, cl_symbol_function(lgdsym));
+
   ECL_CATCH_ALL_BEGIN(env) {
     ECL_HANDLER_CASE_BEGIN(env, ecl_list1(ECL_T)) {
-      cl_object result =
-          cl_eval(c_string_to_object("(cl-upp::read-spec \"blah\")"));
+      cl_object result = cl_eval(
+          c_string_to_object("(handler-case (irrlisp:async-delayed-error) "
+                             "(simple-type-error () (format t \"caught\")))"));
       ecl_print(result, ECL_T);
     } ECL_HANDLER_CASE(1, condition) {
       std::cout << "There was a lisp condition" << std::endl;
