@@ -8,12 +8,13 @@ add_subdirectory(ecl)
 set(BUILD_UNPLUSPLUS_EXAMPLES OFF)
 add_subdirectory(unplusplus)
 
-#get_target_property(IRRLICHT_LIB IrrlichtMt LIBRARY_OUTPUT_NAME)
-#set(IRRLICHT_LIB "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libIrrlichtMt.a")
-set(IRRLICHT_INC "${PROJECT_SOURCE_DIR}/irrlicht/include")
+set(IRRIMGUI_STATIC_LIBRARY ON)
+add_subdirectory(IrrIMGUI)
+
+set(IRRLICHT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/irrlicht/include")
 
 include(unplusplus/cmake/unplusplus.cmake)
-add_unplusplus_clib("${IRRLICHT_INC}/irrlicht.h"
+add_unplusplus_clib("${IRRLICHT_INCLUDE_DIR}/irrlicht.h"
     IrrlichtMt
     --excludes-file "${CMAKE_CURRENT_SOURCE_DIR}/unplusplus/examples/irrlicht/excludes.txt"
     --no-deprecated
@@ -56,4 +57,4 @@ add_custom_target(irrlisp-lib
 add_executable(irrlisp src/main.cpp)
 target_compile_options(irrlisp PUBLIC -Werror-implicit-function-declaration)
 add_dependencies(irrlisp irrlisp-lib)
-target_link_libraries(irrlisp "${IRRLISP_ECL_LIB}" IrrlichtMt-clib ecl)
+target_link_libraries(irrlisp "${IRRLISP_ECL_LIB}" IrrlichtMt-clib ecl IrrIMGUI)

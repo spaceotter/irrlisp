@@ -16,3 +16,6 @@
 [submodule "cl-upp"]
 	path = cl-upp
 	url = https://github.com/spaceotter/cl-upp.git
+[submodule "IrrIMGUI"]
+	path = IrrIMGUI
+	url = https://github.com/spaceotter/IrrIMGUI.git
