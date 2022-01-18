@@ -111,15 +111,26 @@ int main(int argc, char *argv[]) {
   init_lisp(argc, argv, 8117);
 
   cl_env_ptr env = ecl_process_env();
-  cl_object debug_hook = ecl_make_symbol("*INVOKE-DEBUGGER-HOOK*", "EXT");
-  cl_object lgdsym = ecl_make_symbol("GUI-DEBUGGER", "IRRLISP");
-  ecl_setq(env, debug_hook, cl_symbol_function(lgdsym));
+  //cl_object debug_hook = ecl_make_symbol("*INVOKE-DEBUGGER-HOOK*", "EXT");
+  //cl_object lgdsym = ecl_make_symbol("GUI-DEBUGGER", "IRRLISP");
+  //ecl_setq(env, debug_hook, cl_symbol_function(lgdsym));
 
+  cl_object setup_hook = ecl_make_symbol("SETUP", "IRRLISP");
+  //cl_object lisp_type = ecl_make_symbol("UPP-IRR-IRRLICHTDEVICE", "IRRLISP");
+  //cl_object star = ecl_make_symbol("*", "COMMON-LISP");
+  //cl_object device_obj = ecl_make_foreign_data(cl_list(2, star, lisp_type), sizeof(*device), device);
+  std::cout << "smgr" << smgr << std::endl;
+  cl_object device_obj = ecl_make_foreign_data(ECL_NIL, sizeof(*device), device);
+  cl_object result = cl_funcall(3, setup_hook, device_obj, ecl_make_foreign_data(ECL_NIL, 0, smgr));
+  ecl_print(result, ECL_T);
+
+  /*
   ECL_CATCH_ALL_BEGIN(env) {
     ECL_HANDLER_CASE_BEGIN(env, ecl_list1(ECL_T)) {
-      cl_object result = cl_eval(
-          c_string_to_object("(handler-case (irrlisp:async-delayed-error) "
-                             "(simple-type-error () (format t \"caught\")))"));
+      // cl_object result = cl_eval(
+      //     c_string_to_object("(handler-case (irrlisp:async-delayed-error) "
+      //                        "(simple-type-error () (format t \"caught\")))"));
+      cl_object result = cl_eval(c_string_to_object("(irrlisp:setup)"));
       ecl_print(result, ECL_T);
     } ECL_HANDLER_CASE(1, condition) {
       std::cout << "There was a lisp condition" << std::endl;
@@ -129,6 +140,7 @@ int main(int argc, char *argv[]) {
   } ECL_CATCH_ALL_IF_CAUGHT {
     std::cout << "There was an error running lisp" << std::endl;
   } ECL_CATCH_ALL_END;
+  */
 
   while(device->run())
   {
