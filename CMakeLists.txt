@@ -11,8 +11,6 @@ add_subdirectory(unplusplus)
 set(IRRIMGUI_STATIC_LIBRARY ON)
 add_subdirectory(IrrIMGUI)
 
-include(unplusplus/cmake/unplusplus.cmake)
-
 set(IRRLICHT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/irrlicht/include")
 add_unplusplus_clib(IrrlichtMt-clib
     HEADER "${IRRLICHT_INCLUDE_DIR}/irrlicht.h"
