@@ -14,11 +14,12 @@ add_subdirectory(IrrIMGUI)
 set(IRRLICHT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/irrlicht/include")
 
 include(unplusplus/cmake/unplusplus.cmake)
-add_unplusplus_clib("${IRRLICHT_INCLUDE_DIR}/irrlicht.h"
-    IrrlichtMt
-    --excludes-file "${CMAKE_CURRENT_SOURCE_DIR}/unplusplus/examples/irrlicht/excludes.txt"
-    --no-deprecated
-    --extra-arg-before=-std=gnu++17)
+add_unplusplus_clib(IrrlichtMt-clib
+    HEADER "${IRRLICHT_INCLUDE_DIR}/irrlicht.h"
+    LIBRARY IrrlichtMt
+    EXCLUDES_FILE "${CMAKE_CURRENT_SOURCE_DIR}/unplusplus/examples/irrlicht/excludes.txt"
+    NO_DEPRECATED
+    CXXFLAGS -std=gnu++17)
 set_target_properties(IrrlichtMt-clib PROPERTIES CXX_STANDARD 17)
 
 set(ST_JSON_SRC "${PROJECT_SOURCE_DIR}/ST-JSON")
