@@ -11,9 +11,9 @@ add_subdirectory(unplusplus)
 set(IRRIMGUI_STATIC_LIBRARY ON)
 add_subdirectory(IrrIMGUI)
 
-set(IRRLICHT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/irrlicht/include")
-
 include(unplusplus/cmake/unplusplus.cmake)
+
+set(IRRLICHT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/irrlicht/include")
 add_unplusplus_clib(IrrlichtMt-clib
     HEADER "${IRRLICHT_INCLUDE_DIR}/irrlicht.h"
     LIBRARY IrrlichtMt
@@ -27,35 +27,21 @@ set(CL_UPP_SRC "${PROJECT_SOURCE_DIR}/cl-upp")
 set(IRRLISP_SRC "${PROJECT_SOURCE_DIR}/src")
 set(SWANK_SRC "${PROJECT_SOURCE_DIR}/swank")
 
-configure_file(
-    "${PROJECT_SOURCE_DIR}/irrlisp-build.lisp.in"
-    "${PROJECT_BINARY_DIR}/irrlisp-build.lisp")
-set(IRRLISP_ECL_LIB "${PROJECT_BINARY_DIR}/irrlisp.a")
+add_ecl_library(SYSTEM_NAME ST-JSON
+    LISP_SRC "${ST_JSON_SRC}")
+add_ecl_library(SYSTEM_NAME swank
+    LISP_SRC "${SWANK_SRC}")
+add_ecl_library(SYSTEM_NAME cl-upp
+    LISP_SRC "${CL_UPP_SRC}"
+    SYSTEM_PATHS "${ST_JSON_SRC}"
+    SYSTEM_DEPS ST-JSON)
+add_ecl_library(SYSTEM_NAME irrlisp
+    LISP_SRC "${IRRLISP_SRC}"
+    SYSTEM_PATHS
+    "${CL_UPP_SRC}"
+    "${ST_JSON_SRC}"
+    "${SWANK_SRC}"
+    SYSTEM_DEPS ST-JSON cl-upp swank IrrlichtMt-clib)
 
-# TODO: don't use glob
-file(GLOB_RECURSE IRRLISP_COMMON_LISP_SRC LIST_DIRECTORIES false
-    "${ST_JSON_SRC}/*.lisp" "${ST_JSON_SRC}/*.asd"
-    "${CL_UPP_SRC}/*.lisp" "${CL_UPP_SRC}/*.asd"
-    "${IRRLISP_SRC}/*.lisp" "${IRRLISP_SRC}/*.asd"
-    "${SWANK_SRC}/*.lisp" "${SWANK_SRC}/*.asd"
-    )
-
-add_custom_command(
-    OUTPUT "${IRRLISP_ECL_LIB}"
-    COMMAND
-    "${ECL_BINARY_DIR}/ecl"
-    -norc
-    -load "irrlisp-build.lisp"
-    COMMAND
-    mv "${PROJECT_BINARY_DIR}/irrlisp--all-systems.a" "${IRRLISP_ECL_LIB}"
-    DEPENDS ecl-prj "${PROJECT_BINARY_DIR}/irrlisp-build.lisp" IrrlichtMt-clib
-    ${IRRLISP_COMMON_LISP_SRC} "${IrrlispMt-clib_JSON}")
-
-add_custom_target(irrlisp-lib
-    DEPENDS "${IRRLISP_ECL_LIB}" IrrlichtMt-clib ecl
-    )
-
-add_executable(irrlisp src/main.cpp)
-target_compile_options(irrlisp PUBLIC -Werror-implicit-function-declaration)
-add_dependencies(irrlisp irrlisp-lib)
-target_link_libraries(irrlisp "${IRRLISP_ECL_LIB}" IrrlichtMt-clib ecl IrrIMGUI)
+add_executable(irrlisp-test src/main.cpp)
+target_link_libraries(irrlisp-test irrlisp IrrIMGUI)
