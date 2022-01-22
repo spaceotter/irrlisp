@@ -41,5 +41,8 @@ add_ecl_library(SYSTEM_NAME irrlisp
     "${SWANK_SRC}"
     SYSTEM_DEPS ST-JSON cl-upp swank IrrlichtMt-clib)
 
+emit_all_systems_header()
+
 add_executable(irrlisp-test src/main.cpp)
 target_link_libraries(irrlisp-test irrlisp IrrIMGUI)
+target_include_directories(irrlisp-test PUBLIC "${LISP_SYSTEMS_INCLUDE}")

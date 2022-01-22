@@ -6,6 +6,7 @@
 #include <iostream>
 #include <irrlicht.h>
 #include <ecl/ecl.h>
+#include "all_lisp_systems.h"
 
 using namespace irr;
 using namespace core;
@@ -13,13 +14,6 @@ using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
-
-extern "C" {
-extern void init_lib_irrlisp(cl_object);
-extern void init_lib_ST_JSON(cl_object);
-extern void init_lib_swank(cl_object);
-extern void init_lib_cl_upp(cl_object);
-}
 
 static int swank_port;
 
@@ -30,10 +24,7 @@ void init_lisp(int argc, char *argv[], int port) {
   // ecl_set_option(ECL_OPT_TRAP_SIGFPE, 0);
   result = cl_eval(
       c_string_to_object("(ext:set-signal-handler ext:+SIGINT+ #'ext:quit)"));
-  ecl_init_module(NULL, init_lib_irrlisp);
-  ecl_init_module(NULL, init_lib_ST_JSON);
-  ecl_init_module(NULL, init_lib_swank);
-  ecl_init_module(NULL, init_lib_cl_upp);
+  ecl_init_all_modules();
   swank_port = port;
 
   const cl_env_ptr l_env = ecl_process_env();
