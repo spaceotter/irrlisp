@@ -6,7 +6,7 @@
 
 (cl::in-package :irrlisp)
 
-(cl-upp:include-c++ cl-user::*irrlicht-json*)
+(cl-upp:include-c++ (concatenate 'string cl-user::*project-binary-dir* "/IrrlichtMt-clib.json"))
 
 ;; TODO: GUI debugger and better error handling
 (ffi:def-function ("gui_debugger" gui-debugger) ((condition :object) (old-hook :object)))

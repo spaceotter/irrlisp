@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(irrlisp)
 
 set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(irrlicht)
 add_subdirectory(ecl)
