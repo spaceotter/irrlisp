@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
   //cl_object lgdsym = ecl_make_symbol("GUI-DEBUGGER", "IRRLISP");
   //ecl_setq(env, debug_hook, cl_symbol_function(lgdsym));
 
-  cl_object setup_hook = ecl_make_symbol("SETUP", "IRRLISP");
+  cl_object setup_hook = ecl_make_symbol("SETUP", "IRRLISP-TEST");
   //cl_object lisp_type = ecl_make_symbol("UPP-IRR-IRRLICHTDEVICE", "IRRLISP");
   //cl_object star = ecl_make_symbol("*", "COMMON-LISP");
   //cl_object device_obj = ecl_make_foreign_data(cl_list(2, star, lisp_type), sizeof(*device), device);
