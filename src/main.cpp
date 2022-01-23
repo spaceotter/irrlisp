@@ -118,8 +118,12 @@ int main(int argc, char *argv[]) {
   //cl_object device_obj = ecl_make_foreign_data(cl_list(2, star, lisp_type), sizeof(*device), device);
   std::cout << "smgr" << smgr << std::endl;
   cl_object device_obj = ecl_make_foreign_data(ECL_NIL, sizeof(*device), device);
-  cl_object result = cl_funcall(3, setup_hook, device_obj, ecl_make_foreign_data(ECL_NIL, 0, smgr));
-  ecl_print(result, ECL_T);
+  ECL_CATCH_ALL_BEGIN(env) {
+    cl_object result = cl_funcall(3, setup_hook, device_obj, ecl_make_foreign_data(ECL_NIL, 0, smgr));
+    ecl_print(result, ECL_T);
+  } ECL_CATCH_ALL_IF_CAUGHT {
+    std::cout << "There was an error running lisp" << std::endl;
+  } ECL_CATCH_ALL_END;
 
   /*
   ECL_CATCH_ALL_BEGIN(env) {
