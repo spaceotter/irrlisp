@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.20)
 project(irrlisp)
 
-set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_CXX_STANDARD 17)
 
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "build shared libraries" FORCE)
 add_subdirectory(irrlicht)
 add_subdirectory(ecl)
-set(BUILD_UNPLUSPLUS_EXAMPLES OFF)
+set(BUILD_UNPLUSPLUS_EXAMPLES OFF CACHE BOOL "unplusplus examples" FORCE)
 add_subdirectory(unplusplus)
 
 set(IRRIMGUI_STATIC_LIBRARY ON)
