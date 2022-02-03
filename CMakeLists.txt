@@ -44,7 +44,7 @@ add_ecl_library(SYSTEM_NAME irrlisp
     "${ST_JSON_SRC}"
     "${SWANK_SRC}"
     SYSTEM_DEPS ST-JSON cl-upp swank IrrlichtMt-clib
-    ECL_LD_FLAGS "-L${PROJECT_BINARY_DIR} -lIrrlichtMt-clib -lstdc++ -L${IRRLICHT_LINK_DIR} -Wl,-rpath=${IRRLICHT_LINK_DIR} -lIrrlichtMt")
+    ECL_LD_FLAGS "-L${PROJECT_BINARY_DIR} -lIrrlichtMt-clib -lstdc++ -L${IRRLICHT_LINK_DIR} -lIrrlichtMt $<JOIN:$<GENEX_EVAL:$<TARGET_PROPERTY:IrrlichtMt,LINK_LIBRARIES>>, >")
 add_ecl_library(SYSTEM_NAME irrlisp-test
     LISP_SRC "${IRRLISP_SRC}"
     SYSTEM_PATHS
