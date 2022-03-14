@@ -8,12 +8,19 @@
 #include <ecl/ecl.h>
 #include "all_lisp_systems.h"
 
+// library includes
+#include <IrrIMGUI/IncludeIrrlicht.h>
+#include <IrrIMGUI/IncludeIMGUI.h>
+#include <IrrIMGUI/IrrIMGUI.h>
+#include <IrrIMGUI/IrrIMGUIDebug.h>
+
 using namespace irr;
 using namespace core;
 using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
+using namespace IrrIMGUI;
 
 static int swank_port;
 
@@ -69,11 +76,26 @@ extern "C" void gui_debugger(cl_object condition, cl_object old_hook) {
 }
 
 int main(int argc, char *argv[]) {
-  device = createDevice(video::EDT_OPENGL, dimension2d<u32>(1920, 1080), 16,
-                        false, false, true, 0);
+  // Create standard event receiver for the IrrIMGUI
+  CIMGUIEventReceiver EventReceiver;
 
+  // Irrlicht Settings
+  SIrrlichtCreationParameters IrrlichtParams;
+  IrrlichtParams.DriverType    = video::EDT_OPENGL;
+  IrrlichtParams.WindowSize    = core::dimension2d<u32>(1920, 1080);
+  IrrlichtParams.Bits          = 32;
+  IrrlichtParams.Fullscreen    = false;
+  IrrlichtParams.Stencilbuffer = true;
+  IrrlichtParams.AntiAlias     = 16;
+  IrrlichtParams.Vsync         = true;
+  IrrlichtParams.EventReceiver = &EventReceiver;
+
+  device = createDeviceEx(IrrlichtParams);
   if (!device)
     return 1;
+
+  // Create GUI object
+  IIMGUIHandle * const pGUI = createIMGUI(device, &EventReceiver);
 
   device->setWindowCaption(L"Hello World! - Irrlicht Engine Demo");
 
@@ -112,13 +134,24 @@ int main(int argc, char *argv[]) {
     */
     driver->beginScene(ECBF_COLOR | ECBF_DEPTH, SColor(255, 100, 101, 140));
 
+    pGUI->startGUI();
+    ImGui::Begin("Picture sources", NULL, ImGuiWindowFlags_None);
+    ImGui::Text("Hello World! This is Irrlicht with the opengl renderer! And IMGUI too ♨!");
+    if (ImGui::Button("Exit", ImVec2(40, 20)))
+    {
+      device->closeDevice();
+    }
+    ImGui::End();
+
     smgr->drawAll();
     guienv->drawAll();
+    pGUI->drawAll();
 
     driver->endScene();
   }
 
   device->drop();
+  pGUI->drop();
 
   deinit_lisp();
 
