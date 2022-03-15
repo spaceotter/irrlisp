@@ -19,6 +19,12 @@ add_unplusplus_clib(IrrlichtMt-clib
     EXCLUDES_FILE "${CMAKE_CURRENT_SOURCE_DIR}/unplusplus/examples/irrlicht/excludes.txt"
     NO_DEPRECATED
     CXXFLAGS -std=gnu++17)
+add_unplusplus_clib(IMGUI-clib
+    HEADER "${PROJECT_SOURCE_DIR}/IrrIMGUI/dependency/IMGUI/imgui.h"
+    LIBRARY IrrIMGUI
+    EXCLUDES_FILE "${CMAKE_CURRENT_SOURCE_DIR}/imgui-excludes.txt"
+    NO_DEPRECATED
+    CXXFLAGS -std=gnu++17)
 set_target_properties(IrrlichtMt-clib PROPERTIES
     CXX_STANDARD 17
     POSITION_INDEPENDENT_CODE ON)
