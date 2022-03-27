@@ -21,14 +21,8 @@
   (coerce string 'base-string))
 
 (defun get-mesh (smgr path)
-  (ffi:with-foreign-string (c-path path)
-    (ffi:with-foreign-string (alt-cache (coerce "" 'base-string))
-      (irrlisp::upp-irr-scene-ISceneManager-getMesh
-       smgr
-       (irrlisp::upp-new-irr-core-string-char-irr-core-irrAllocator-char-8 c-path)
-       (irrlisp::upp-new-irr-core-string-char-irr-core-irrAllocator-char-8 alt-cache)
-       )
-      )))
+  (with-irr-strings ((c-path path) (alt-cache ""))
+    (irrlisp::upp-irr-scene-ISceneManager-getMesh smgr c-path alt-cache)))
 
 (defvar *device* nil)
 (defvar *driver* nil)
@@ -40,7 +34,7 @@
   (let* ((smgr (irrlisp::upp-irr-IrrlichtDevice-getSceneManager *device*))
          )
     (format t "smgr ~A~%" smgr)
-    (let ((mesh (get-mesh smgr (coerce "irrlicht/media/faerie.md2" 'base-string))))
+    (let ((mesh (get-mesh smgr "irrlicht/media/faerie.md2")))
       (format t "~A~%" mesh)
       (unless (ffi:null-pointer-p mesh)
         (setq *node* (irrlisp::upp-irr-scene-ISceneManager-addAnimatedMeshSceneNode
@@ -54,7 +48,9 @@
         (format t "Added to scene?~%")
         (irrlisp::upp-irr-scene-ianimatedmeshscenenode-setmd2animation *node* 0)
         (irrlisp::upp-irr-scene-iscenenode-setmaterialflag *node* 8 0)
-        (setq *texture* (irrlisp::upp-irr-video-ivideodriver-gettexture *driver* (convert-string "irrlicht/media/faerie2.bmp")))
+        (setq *texture*
+              (with-irr-string (bmp-path "irrlicht/media/faerie2.bmp")
+                               (irrlisp::upp-irr-video-ivideodriver-gettexture *driver* bmp-path)))
         (irrlisp::upp-irr-scene-iscenenode-setmaterialtexture *node* 0 *texture*))
       )
     ))
