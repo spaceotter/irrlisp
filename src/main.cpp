@@ -119,6 +119,7 @@ int main(int argc, char *argv[]) {
     ecl_print(result, ECL_T);
     result = cl_funcall(1, ecl_make_symbol("SETUP", "IRRLISP-TEST"));
     ecl_print(result, ECL_T);
+    std::cout << std::endl;
   } ECL_CATCH_ALL_IF_CAUGHT {
     std::cout << "There was an error running lisp" << std::endl;
   } ECL_CATCH_ALL_END;
@@ -135,13 +136,12 @@ int main(int argc, char *argv[]) {
     driver->beginScene(ECBF_COLOR | ECBF_DEPTH, SColor(255, 100, 101, 140));
 
     pGUI->startGUI();
-    ImGui::Begin("Picture sources", NULL, ImGuiWindowFlags_None);
-    ImGui::Text("Hello World! This is Irrlicht with the opengl renderer! And IMGUI too ♨!");
-    if (ImGui::Button("Exit", ImVec2(40, 20)))
-    {
-      device->closeDevice();
-    }
-    ImGui::End();
+
+    ECL_CATCH_ALL_BEGIN(env) {
+      cl_funcall(1, ecl_make_symbol("IMGUI", "IRRLISP-TEST"));
+    } ECL_CATCH_ALL_IF_CAUGHT {
+      std::cout << "There was an error running lisp" << std::endl;
+    } ECL_CATCH_ALL_END;
 
     smgr->drawAll();
     guienv->drawAll();

@@ -1,5 +1,6 @@
 (defpackage :irrlisp-test
-  (:use :common-lisp :ffi :irrlisp :cl-imgui)
+  (:use :common-lisp :ffi :irrlisp)
+  (:local-nicknames (#:ig :cl-imgui))
   (:export #:async-delayed-error
            #:setup
            #:convert-string))
@@ -42,6 +43,11 @@
         (setq *texture*
               (with-irr-string (bmp-path "irrlicht/media/faerie2.bmp")
                                (irrlisp::upp-irr-video-ivideodriver-gettexture *driver* bmp-path)))
-        (irrlisp::upp-irr-scene-iscenenode-setmaterialtexture *node* 0 *texture*))
-      )
-    ))
+        (irrlisp::upp-irr-scene-iscenenode-setmaterialtexture *node* 0 *texture*)))))
+
+(defun imgui ()
+  (ig:begin "Character Builder")
+  (ig:text "Hello World!")
+  (if (ig:button "Test" 40 20)
+      (format t "Button Pressed~%"))
+  (ig:end))
