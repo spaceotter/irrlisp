@@ -46,8 +46,8 @@
         (irrlisp::upp-irr-scene-iscenenode-setmaterialtexture *node* 0 *texture*)))))
 
 (defun imgui ()
-  (ig:begin "Character Builder")
-  (ig:text "Hello World!")
-  (if (ig:button "Test" 40 20)
+  (ig:begin #n"Character Builder")
+  (ig:text #n"Hello World!")
+  (if (ig:button #n"Test" 40 20)
       (format t "Button Pressed~%"))
   (ig:end))
