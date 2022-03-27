@@ -1,3 +1,3 @@
 (defsystem "irrlisp"
-  :depends-on (:swank :cl-upp)
+  :depends-on (:cl-upp)
   :components ((:file "irrlisp")))

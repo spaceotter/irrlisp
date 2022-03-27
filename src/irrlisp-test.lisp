@@ -1,5 +1,5 @@
 (defpackage :irrlisp-test
-  (:use :common-lisp :ffi :irrlisp)
+  (:use :common-lisp :ffi :irrlisp :cl-imgui)
   (:export #:async-delayed-error
            #:setup
            #:convert-string))
@@ -10,15 +10,6 @@
 ;;(ffi:def-function ("gui_debugger" gui-debugger) ((condition :object) (old-hook :object)))
 (defun delayed-error () (sleep 1) (error 'simple-type-error))
 (defun async-delayed-error () (mp:process-run-function 'troll #'delayed-error))
-
-;; TODO: Avoid leaking memory
-(defun convert-string (str)
-  (ffi:with-foreign-string
-      (c-str (coerce str 'base-string))
-      (irrlisp::upp-new-irr-core-string-char-irr-core-irrAllocator-char-8 c-str)))
-
-(defmacro coerce-base (string)
-  (coerce string 'base-string))
 
 (defun get-mesh (smgr path)
   (with-irr-strings ((c-path path) (alt-cache ""))

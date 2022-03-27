@@ -1,3 +1,3 @@
 (defsystem "irrlisp-test"
-  :depends-on (:swank :cl-upp :irrlisp)
+  :depends-on (:cl-upp :irrlisp :cl-imgui)
   :components ((:file "irrlisp-test")))

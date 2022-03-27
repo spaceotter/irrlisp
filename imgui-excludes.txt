@@ -1,3 +1,5 @@
+operator new
+operator delete
 ImVector<unsigned short>::clear_delete
 ImVector<ImGuiTextFilter::ImGuiTextRange>::clear_delete
 ImVector<ImGuiTextFilter::ImGuiTextRange>::contains
