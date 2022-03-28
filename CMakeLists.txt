@@ -16,11 +16,11 @@ set_target_properties(IrrIMGUI PROPERTIES
 
 set(IRRLICHT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/irrlicht/include")
 add_unplusplus_clib(IrrlichtMt-clib
-    HEADER "${IRRLICHT_INCLUDE_DIR}/irrlicht.h"
+    HEADER "${PROJECT_SOURCE_DIR}/src/irrlicht-upp.h"
     LIBRARY IrrlichtMt
     EXCLUDES_FILE "${CMAKE_CURRENT_SOURCE_DIR}/unplusplus/examples/irrlicht/excludes.txt"
     NO_DEPRECATED
-    CXXFLAGS -std=gnu++17)
+    CXXFLAGS -std=gnu++17 -I${IRRLICHT_INCLUDE_DIR})
 set_target_properties(IrrlichtMt-clib PROPERTIES
     CXX_STANDARD 17
     POSITION_INDEPENDENT_CODE ON)
