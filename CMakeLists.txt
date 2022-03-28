@@ -15,8 +15,11 @@ set_target_properties(IrrIMGUI PROPERTIES
     POSITION_INDEPENDENT_CODE ON)
 
 set(IRRLICHT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/irrlicht/include")
+set(IMGUI_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/IrrIMGUI/dependency/IMGUI")
+set(CL_IMGUI_SRC "${PROJECT_SOURCE_DIR}/cl-imgui")
+set(IRRLISP_SRC "${PROJECT_SOURCE_DIR}/src")
 add_unplusplus_clib(IrrlichtMt-clib
-    HEADER "${PROJECT_SOURCE_DIR}/src/irrlicht-upp.h"
+    HEADER "${IRRLISP_SRC}/irrlicht-upp.hpp"
     LIBRARY IrrlichtMt
     EXCLUDES_FILE "${CMAKE_CURRENT_SOURCE_DIR}/unplusplus/examples/irrlicht/excludes.txt"
     NO_DEPRECATED
@@ -25,18 +28,17 @@ set_target_properties(IrrlichtMt-clib PROPERTIES
     CXX_STANDARD 17
     POSITION_INDEPENDENT_CODE ON)
 add_unplusplus_clib(IMGUI-clib
-    HEADER "${PROJECT_SOURCE_DIR}/IrrIMGUI/dependency/IMGUI/imgui.h"
+    HEADER "${CL_IMGUI_SRC}/imgui-upp.hpp"
     LIBRARY IrrIMGUI
-    EXCLUDES_FILE "${CMAKE_CURRENT_SOURCE_DIR}/imgui-excludes.txt"
+    EXCLUDES_FILE "${CL_IMGUI_SRC}/imgui-excludes.txt"
     NO_DEPRECATED
-    CXXFLAGS -std=gnu++17)
+    CXXFLAGS -std=gnu++17 -I${IMGUI_INCLUDE_DIR})
 set_target_properties(IMGUI-clib PROPERTIES
     CXX_STANDARD 17
     POSITION_INDEPENDENT_CODE ON)
 
 set(ST_JSON_SRC "${PROJECT_SOURCE_DIR}/ST-JSON")
 set(CL_UPP_SRC "${PROJECT_SOURCE_DIR}/cl-upp")
-set(IRRLISP_SRC "${PROJECT_SOURCE_DIR}/src")
 set(SWANK_SRC "${PROJECT_SOURCE_DIR}/swank")
 get_target_property(IRRLICHT_LINK_DIR IrrlichtMt LIBRARY_OUTPUT_DIRECTORY)
 
@@ -57,7 +59,7 @@ add_ecl_library(SYSTEM_NAME irrlisp
     SYSTEM_DEPS ST-JSON cl-upp IrrlichtMt-clib
     ECL_LD_FLAGS "-L${PROJECT_BINARY_DIR} -lIrrlichtMt-clib -lstdc++ -L${IRRLICHT_LINK_DIR} -lIrrlichtMt $<JOIN:$<GENEX_EVAL:$<TARGET_PROPERTY:IrrlichtMt,LINK_LIBRARIES>>, >")
 add_ecl_library(SYSTEM_NAME cl-imgui
-    LISP_SRC "${IRRLISP_SRC}"
+    LISP_SRC "${CL_IMGUI_SRC}"
     SYSTEM_PATHS
     "${CL_UPP_SRC}"
     "${ST_JSON_SRC}"
@@ -67,6 +69,7 @@ add_ecl_library(SYSTEM_NAME irrlisp-test
     LISP_SRC "${IRRLISP_SRC}"
     SYSTEM_PATHS
     "${CL_UPP_SRC}"
+    "${CL_IMGUI_SRC}"
     "${ST_JSON_SRC}"
     SYSTEM_DEPS irrlisp cl-imgui)
 
